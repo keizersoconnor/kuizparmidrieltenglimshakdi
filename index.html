@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latihan Sejarah Tingkatan 2 - Kesultanan Johor Riau</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d',
+                        },
+                        amberCustom: {
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col antialiased">
+
+    <!-- Navbar Header -->
+    <header class="bg-slate-800/90 backdrop-blur border-b border-slate-700 sticky top-0 z-40 shadow-lg">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+            
+            <div class="flex items-center space-x-3">
+                <div class="p-2.5 bg-gradient-to-tr from-amber-500 to-amber-600 rounded-xl shadow-md text-white">
+                    <i class="fa-solid fa-book-bookmark text-xl"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="font-bold text-lg text-white">Portal Latihan Sejarah KSSM</h1>
+                        <span class="bg-amber-500/20 text-amber-300 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-amber-500/30">Tingkatan 2</span>
+                    </div>
+                    <p class="text-xs text-slate-400">Bab 6: Kesultanan Johor Riau dan Hubungan Luar</p>
+                </div>
+            </div>
+
+            <!-- Timer Widget -->
+            <div class="flex items-center space-x-3 bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700">
+                <div class="text-right">
+                    <span class="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">Baki Masa</span>
+                    <span id="timerDisplay" class="font-mono text-2xl font-black text-amber-400 tracking-wider">01:00:00</span>
+                </div>
+                <div class="flex gap-1">
+                    <button id="toggleTimerBtn" onclick="toggleTimer()" title="Pause/Play Timer" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs transition">
+                        <i id="toggleTimerIcon" class="fa-solid fa-pause"></i>
+                    </button>
+                    <button onclick="resetTimer()" title="Reset Timer" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs transition">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 py-8 flex-grow w-full space-y-8">
+
+        <!-- Top Banner / Info -->
+        <div class="bg-gradient-to-r from-indigo-900/40 via-slate-800 to-slate-800 p-6 rounded-2xl border border-indigo-500/30 shadow-xl relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 opacity-10 text-indigo-400 pointer-events-none">
+                <i class="fa-solid fa-landmark text-9xl"></i>
+            </div>
+            <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <div class="inline-flex items-center gap-2 text-xs font-medium text-indigo-300 bg-indigo-950/60 px-3 py-1 rounded-full border border-indigo-800 mb-2">
+                        <i class="fa-solid fa-circle-info"></i> Modul Latihan Struktur Subjektif (18 Markah)
+                    </div>
+                    <h2 class="text-xl font-bold text-white">Latihan Soalan Esei Pendek / Struktur</h2>
+                    <p class="text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                        Jawab ketiga-tiga soalan di bawah berpandukan fakta Buku Teks Sejarah Tingkatan 2. Anda boleh menggunakan kunci API Gemini pilihan anda untuk penilaian AI pintar atau menggunakan enjin penyemak fakta standard.
+                    </p>
+                </div>
+
+                <!-- API Key Option -->
+                <div class="w-full md:w-auto bg-slate-900/90 p-3 rounded-xl border border-slate-700 text-xs space-y-2 min-w-[280px]">
+                    <div class="flex justify-between items-center text-slate-300 font-semibold">
+                        <span><i class="fa-solid fa-key text-amber-400 mr-1"></i> Gemini API (Pilihan)</span>
+                        <span id="apiStatusBadge" class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded">Standard AI</span>
+                    </div>
+                    <div class="flex gap-1">
+                        <input type="password" id="apiKeyInput" placeholder="Tampal API Key Gemini di sini..." class="w-full px-2.5 py-1.5 bg-slate-800 border border-slate-700 rounded text-slate-200 text-xs focus:outline-none focus:border-indigo-500">
+                        <button onclick="saveApiKey()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded font-medium transition text-xs">Simpan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Form -->
+        <form id="quizForm" onsubmit="event.preventDefault(); submitQuiz();" class="space-y-6">
+
+            <!-- Soalan 1 -->
+            <div class="bg-slate-800/80 rounded-2xl border border-slate-700 shadow-md p-6 relative">
+                <div class="flex justify-between items-start mb-4 pb-3 border-b border-slate-700">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400 font-bold flex items-center justify-center text-sm">c(i)</span>
+                        <div>
+                            <h3 class="font-bold text-white text-base md:text-lg">Soalan 1</h3>
+                            <span class="text-xs text-slate-400">Rujukan: Buku Teks M/S 103</span>
+                        </div>
+                    </div>
+                    <span class="bg-slate-700 text-slate-300 text-xs font-semibold px-3 py-1 rounded-full border border-slate-600">6 Markah</span>
+                </div>
+
+                <label class="block text-slate-200 font-medium text-sm md:text-base mb-3 leading-relaxed">
+                    Bagaimanakah Johor membantu Belanda untuk merampas Melaka daripada Portugis?
+                </label>
+
+                <textarea id="q1_input" rows="4" required class="w-full p-4 bg-slate-900 border border-slate-700 rounded-xl text-slate-200 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition leading-relaxed custom-scrollbar" placeholder="Tuliskan jawapan anda dengan lengkap mengikut kata kunci fakta sejarah..."></textarea>
+                
+                <div id="q1_feedback" class="hidden mt-4 p-4 rounded-xl text-xs space-y-2"></div>
+            </div>
+
+            <!-- Soalan 2 -->
+            <div class="bg-slate-800/80 rounded-2xl border border-slate-700 shadow-md p-6 relative">
+                <div class="flex justify-between items-start mb-4 pb-3 border-b border-slate-700">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400 font-bold flex items-center justify-center text-sm">c(ii)</span>
+                        <div>
+                            <h3 class="font-bold text-white text-base md:text-lg">Soalan 2</h3>
+                            <span class="text-xs text-slate-400">Rujukan: Buku Teks M/S 107</span>
+                        </div>
+                    </div>
+                    <span class="bg-slate-700 text-slate-300 text-xs font-semibold px-3 py-1 rounded-full border border-slate-600">6 Markah</span>
+                </div>
+
+                <label class="block text-slate-200 font-medium text-sm md:text-base mb-3 leading-relaxed">
+                    Jelaskan peranan Orang Laut kepada perkembangan perdagangan Kesultanan Johor Riau.
+                </label>
+
+                <textarea id="q2_input" rows="4" required class="w-full p-4 bg-slate-900 border border-slate-700 rounded-xl text-slate-200 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition leading-relaxed custom-scrollbar" placeholder="Tuliskan jawapan anda dengan lengkap mengikut kata kunci fakta sejarah..."></textarea>
+
+                <div id="q2_feedback" class="hidden mt-4 p-4 rounded-xl text-xs space-y-2"></div>
+            </div>
+
+            <!-- Soalan 3 -->
+            <div class="bg-slate-800/80 rounded-2xl border border-slate-700 shadow-md p-6 relative">
+                <div class="flex justify-between items-start mb-4 pb-3 border-b border-slate-700">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400 font-bold flex items-center justify-center text-sm">c(iii)</span>
+                        <div>
+                            <h3 class="font-bold text-white text-base md:text-lg">Soalan 3</h3>
+                            <span class="text-xs text-slate-400">Rujukan: Buku Teks M/S 106</span>
+                        </div>
+                    </div>
+                    <span class="bg-slate-700 text-slate-300 text-xs font-semibold px-3 py-1 rounded-full border border-slate-600">6 Markah</span>
+                </div>
+
+                <label class="block text-slate-200 font-medium text-sm md:text-base mb-3 leading-relaxed">
+                    Jelaskan urusan jual beli yang berlaku di pelabuhan Johor Riau.
+                </label>
+
+                <textarea id="q3_input" rows="4" required class="w-full p-4 bg-slate-900 border border-slate-700 rounded-xl text-slate-200 placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition leading-relaxed custom-scrollbar" placeholder="Tuliskan jawapan anda dengan lengkap mengikut kata kunci fakta sejarah..."></textarea>
+
+                <div id="q3_feedback" class="hidden mt-4 p-4 rounded-xl text-xs space-y-2"></div>
+            </div>
+
+            <!-- Submit Action Footer -->
+            <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="text-center sm:text-left">
+                    <h3 class="text-white font-bold text-base">Semakan & Penilaian Latihan</h3>
+                    <p class="text-slate-400 text-xs">Tekan butang di sebelah untuk menyemak dan menilai jawapan anda.</p>
+                </div>
+                <button type="submit" id="submitBtn" class="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-sm rounded-xl shadow-lg hover:shadow-emerald-900/30 transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles text-emerald-200"></i>
+                    <span>Selesai & Semak Jawapan</span>
+                </button>
+            </div>
+
+        </form>
+
+    </main>
+
+    <!-- Modal Result Container -->
+    <div id="resultModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+            
+            <div class="p-6 bg-gradient-to-r from-indigo-900 via-slate-800 to-slate-800 border-b border-slate-700 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="p-3 bg-amber-500/20 border border-amber-500/30 rounded-xl text-amber-400">
+                        <i class="fa-solid fa-trophy text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-white text-lg">Keputusan & Laporan Analisis AI</h3>
+                        <p class="text-slate-400 text-xs">Semakan Komprehensif Sejarah Tingkatan 2</p>
+                    </div>
+                </div>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white p-2 rounded-lg bg-slate-700/50 hover:bg-slate-700 text-sm">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto space-y-6 custom-scrollbar flex-grow">
+                
+                <!-- Overall Score Box -->
+                <div class="bg-slate-900/90 rounded-2xl p-6 border border-slate-700 text-center relative overflow-hidden">
+                    <div class="text-xs uppercase font-bold text-slate-400 tracking-wider mb-1">Jumlah Markah Keseluruhan</div>
+                    <div class="flex items-center justify-center gap-2 text-4xl md:text-5xl font-black text-amber-400 my-2">
+                        <span id="modalTotalScore">0</span>
+                        <span class="text-2xl text-slate-500 font-normal">/ 18</span>
+                    </div>
+                    <p id="modalScoreRating" class="text-xs text-emerald-400 font-medium">Prestasi Sangat Baik!</p>
+                </div>
+
+                <!-- Individual Questions Breakdown -->
+                <div id="modalBreakdown" class="space-y-4">
+                    <!-- Populated dynamically -->
+                </div>
+
+            </div>
+
+            <div class="p-4 bg-slate-900/60 border-t border-slate-700 flex justify-end gap-3">
+                <button onclick="closeModal()" class="px-5 py-2.5 bg-slate-700 hover:bg-slate-600 text-white text-xs font-semibold rounded-xl transition">
+                    Tutup & Semak Halaman
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- 1. TIMER LOGIC ---
+        let totalSeconds = 3600; // 1 hour
+        let timerInterval = null;
+        let isTimerRunning = true;
+
+        const timerDisplay = document.getElementById('timerDisplay');
+        const toggleTimerIcon = document.getElementById('toggleTimerIcon');
+
+        function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (totalSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Masa 1 jam telah tamat! Jawapan anda disemak sekarang.');
+                    submitQuiz();
+                    return;
+                }
+                totalSeconds--;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const hrs = Math.floor(totalSeconds / 3600);
+            const mins = Math.floor((totalSeconds % 3600) / 60);
+            const secs = totalSeconds % 60;
+            timerDisplay.textContent = 
+                `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function toggleTimer() {
+            if (isTimerRunning) {
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+                toggleTimerIcon.className = "fa-solid fa-play";
+            } else {
+                startTimer();
+                isTimerRunning = true;
+                toggleTimerIcon.className = "fa-solid fa-pause";
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            totalSeconds = 3600;
+            updateTimerDisplay();
+            if (isTimerRunning) startTimer();
+        }
+
+        // Init timer on load
+        startTimer();
+
+        // --- 2. API KEY MANAGEMENT ---
+        let userApiKey = localStorage.getItem('gemini_api_key') || '';
+
+        if (userApiKey) {
+            document.getElementById('apiKeyInput').value = userApiKey;
+            document.getElementById('apiStatusBadge').textContent = 'Gemini Live AI Active';
+            document.getElementById('apiStatusBadge').className = 'text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded';
+        }
+
+        function saveApiKey() {
+            const key = document.getElementById('apiKeyInput').value.trim();
+            userApiKey = key;
+            localStorage.setItem('gemini_api_key', key);
+            if (key) {
+                document.getElementById('apiStatusBadge').textContent = 'Gemini Live AI Active';
+                document.getElementById('apiStatusBadge').className = 'text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded';
+                alert('API Key Gemini berjaya disimpan!');
+            } else {
+                document.getElementById('apiStatusBadge').textContent = 'Standard AI';
+                document.getElementById('apiStatusBadge').className = 'text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded';
+                alert('API Key dipadamkan. Sistem akan guna enjin standard.');
+            }
+        }
+
+        // --- 3. SEJARAH TINGKATAN 2 RUBRICS & STANDARDS ---
+        const textbookRubric = [
+            {
+                id: 1,
+                title: "Bagaimanakah Johor membantu Belanda untuk merampas Melaka daripada Portugis?",
+                page: "Buku Teks M/S 103",
+                maxMark: 6,
+                facts: [
+                    { kw: ["mengepung", "kepungan"], desc: "Menganggu / mengepung Kota Melaka dari darat bersama tentera Belanda." },
+                    { kw: ["membantu tentera", "bekalan makanan", "tentera darat", "bantuan tentera"], desc: "Menyediakan bantuan tentera darat dan bekalan makanan/logistik." },
+                    { kw: ["membuat kapal", "membina kapal", "membaiki kapal"], desc: "Membantu membina dan membaiki kapal perang." },
+                    { kw: ["menyekat", "sekatan", "bantuan portugis"], desc: "Menyekat saluran bantuan atau bekalan kepada Portugis di Melaka." },
+                    { kw: ["memandut pembawa", "memandu kapal", "penunjuk arah"], desc: "Menjadi penunjuk arah pelayaran atau mengawal kawasan perairan." },
+                    { kw: ["mengikat perjanjian", "perjanjian 1641"], desc: "Mengikat Perjanjian Kerjasama Johor-Belanda (Perjanjian 1641)." }
+                ],
+                sampleAnswer: "Johor membantu Belanda dengan mengikat Perjanjian 1641 untuk menyerang Portugis. Johor menyertai kepungan ke atas Kota Melaka dari arah darat, menyediakan bantuan tentera darat, membekalkan sumber makanan, membantu membina serta membaiki kapal perang, dan menyekat laluan bantuan Portugis."
+            },
+            {
+                id: 2,
+                title: "Jelaskan peranan Orang Laut kepada perkembangan perdagangan Kesultanan Johor Riau.",
+                page: "Buku Teks M/S 107",
+                maxMark: 6,
+                facts: [
+                    { kw: ["pengawal", "keselamatan", "menjaga perairan"], desc: "Pengawal pelabuhan dan menjaga keselamatan perairan/pelabuhan Johor Riau." },
+                    { kw: ["penunda", "menunda kapal"], desc: "Bertindak sebagai penunda kapal-kapal dagang asing." },
+                    { kw: ["penunjuk arah", "pandu kapal"], desc: "Menjadi penunjuk arah navigasi kepada pedagang luar di Selat Melaka & perairan Johor." },
+                    { kw: ["setia", "taat setia", "kesetiaan"], desc: "Mempunyai kesetiaan yang tinggi kepada Sultan Johor." },
+                    { kw: ["membekalkan hasil laut", "hasil laut", "sumber perdagangan"], desc: "Membekalkan hasil laut untuk tujuan perdagangan pelabuhan." },
+                    { kw: ["mengawal keamanan", "lanun", "mencegah perompak"], desc: "Mengawal keselamatan daripada ancaman lanun di laluan pelayaran." }
+                ],
+                sampleAnswer: "Peranan Orang Laut termasuklah menjadi pengawal pelabuhan dan perairan untuk menjamin keselamatan pedagang. Mereka bertindak sebagai penunda kapal dagang, penunjuk arah laluan pelayaran di perairan Johor dan Selat Melaka, membekalkan hasil laut, serta menumpaskan ancaman lanun."
+            },
+            {
+                id: 3,
+                title: "Jelaskan urusan jual beli yang berlaku di pelabuhan Johor Riau.",
+                page: "Buku Teks M/S 106",
+                maxMark: 6,
+                facts: [
+                    { kw: ["barter", "tukar barang"], desc: "Menjalankan sistem perdagangan tukar barang (sistem barter)." },
+                    { kw: ["mata wang", "wang emas", "wang perak", "katun"], desc: "Menggunakan mata wang emas, perak, dan mata wang timah (katun)." },
+                    { kw: ["dolar spanish", "dolar spanyol", "mata wang asing"], desc: "Menerima mata wang asing seperti Dolar Sepanyol dan Ringgit Belanda." },
+                    { kw: ["cukai", "cukai pelabuhan", "bayaran cukai"], desc: "Mengenakan cukai pelabuhan / cukai perdagangan yang berpatutan." },
+                    { kw: ["syahbandar", "peranan syahbandar"], desc: "Urusan ditadbir secara teratur oleh Syahbandar yang mengurus timbangan/ukuran." },
+                    { kw: ["kemudahan", "gudang", "membaiki kapal"], desc: "Menyediakan kemudahan gudang penyimpanan barang dan perkhidmatan membaiki kapal." }
+                ],
+                sampleAnswer: "Urusan jual beli di pelabuhan Johor Riau dijalankan secara sistem tukar barang (barter) dan penggunaan mata wang tempatan (emas, perak, katun timah) serta mata wang asing (Dolar Sepanyol). Syahbandar menguruskan cukai dan perkhidmatan gudang secara teratur."
+            }
+        ];
+
+        // --- 4. EVALUATION ENGINE (FALLBACK / LOCAL STANDARDS) ---
+        function evaluateLocal(questionIndex, text) {
+            const rubric = textbookRubric[questionIndex];
+            const lowerText = text.toLowerCase();
+
+            let matchedFacts = [];
+            let missingFacts = [];
+            let score = 0;
+
+            rubric.facts.forEach(fact => {
+                const found = fact.kw.some(keyword => lowerText.includes(keyword));
+                if (found) {
+                    matchedFacts.push(fact.desc);
+                    score += 1;
+                } else {
+                    missingFacts.push(fact.desc);
+                }
+            });
+
+            // Adjust score to max 6
+            if (score > 6) score = 6;
+            if (score === 0 && text.trim().length > 15) score = 1; // Attempt mark
+
+            return {
+                score,
+                maxMark: 6,
+                matchedFacts,
+                missingFacts,
+                feedback: `Fakta Ditemui: ${matchedFacts.length}/${rubric.facts.length}. ${score >= 4 ? 'Jawapan lengkap dan berfakta.' : 'Sila tambah fakta penting seperti di bawah.'}`,
+                sampleAnswer: rubric.sampleAnswer
+            };
+        }
+
+        // --- 5. EVALUATION ENGINE (GEMINI LIVE API) ---
+        async function evaluateWithGemini(userAnswers) {
+            const apiKey = userApiKey || "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            const prompt = `
+            Act as an expert Form 2 History (Sejarah Tingkatan 2 KSSM Malaysia) examiner.
+            Evaluate the student's written answers for the following 3 structure questions based on the textbook standard (Buku Teks Sejarah Tingkatan 2).
+
+            Question 1: Bagaimanakah Johor membantu Belanda untuk merampas Melaka daripada Portugis? (Max: 6m)
+            Student Answer 1: "${userAnswers[0]}"
+
+            Question 2: Jelaskan peranan Orang Laut kepada perkembangan perdagangan Kesultanan Johor Riau. (Max: 6m)
+            Student Answer 2: "${userAnswers[1]}"
+
+            Question 3: Jelaskan urusan jual beli yang berlaku di pelabuhan Johor Riau. (Max: 6m)
+            Student Answer 3: "${userAnswers[2]}"
+
+            Respond strictly in valid JSON format matching this schema:
+            {
+                "evaluations": [
+                    {
+                        "questionNumber": 1,
+                        "score": number (0 to 6),
+                        "feedback": "Concise Malay explanation of performance",
+                        "matchedFacts": ["list of correct facts identified"],
+                        "missingFacts": ["list of important SPM facts missing"],
+                        "sampleAnswer": "Standard textbook answer"
+                    },
+                    {
+                        "questionNumber": 2,
+                        "score": number (0 to 6),
+                        "feedback": "Concise Malay explanation of performance",
+                        "matchedFacts": ["list of correct facts identified"],
+                        "missingFacts": ["list of important SPM facts missing"],
+                        "sampleAnswer": "Standard textbook answer"
+                    },
+                    {
+                        "questionNumber": 3,
+                        "score": number (0 to 6),
+                        "feedback": "Concise Malay explanation of performance",
+                        "matchedFacts": ["list of correct facts identified"],
+                        "missingFacts": ["list of important SPM facts missing"],
+                        "sampleAnswer": "Standard textbook answer"
+                    }
+                ]
+            }
+            `;
+
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: {
+                    responseMimeType: "application/json"
+                }
+            };
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error("Gagal berhubung dengan Gemini API.");
+            }
+
+            const data = await response.json();
+            const textResult = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+            return JSON.parse(textResult);
+        }
+
+        // --- 6. SUBMIT & RENDER LOGIC ---
+        async function submitQuiz() {
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> <span>Menyemak Jawapan AI...</span>`;
+
+            const userAnswers = [
+                document.getElementById('q1_input').value.trim(),
+                document.getElementById('q2_input').value.trim(),
+                document.getElementById('q3_input').value.trim()
+            ];
+
+            let evalResults = [];
+
+            try {
+                if (userApiKey) {
+                    const geminiRes = await evaluateWithGemini(userAnswers);
+                    evalResults = geminiRes.evaluations;
+                } else {
+                    // Use standard local evaluation
+                    evalResults = userAnswers.map((ans, idx) => {
+                        const localEval = evaluateLocal(idx, ans);
+                        return {
+                            questionNumber: idx + 1,
+                            score: localEval.score,
+                            feedback: localEval.feedback,
+                            matchedFacts: localEval.matchedFacts,
+                            missingFacts: localEval.missingFacts,
+                            sampleAnswer: localEval.sampleAnswer
+                        };
+                    });
+                }
+            } catch (err) {
+                console.warn("API Error, falling back to local evaluation engine:", err);
+                evalResults = userAnswers.map((ans, idx) => {
+                    const localEval = evaluateLocal(idx, ans);
+                    return {
+                        questionNumber: idx + 1,
+                        score: localEval.score,
+                        feedback: localEval.feedback + " (Guna enjin simpanan standard)",
+                        matchedFacts: localEval.matchedFacts,
+                        missingFacts: localEval.missingFacts,
+                        sampleAnswer: localEval.sampleAnswer
+                    };
+                });
+            }
+
+            // Render Inline & Modal Results
+            let totalScore = 0;
+            const modalBreakdown = document.getElementById('modalBreakdown');
+            modalBreakdown.innerHTML = '';
+
+            evalResults.forEach((res, i) => {
+                const qNum = i + 1;
+                totalScore += res.score;
+
+                // Render Inline Feedback under question textarea
+                const feedbackDiv = document.getElementById(`q${qNum}_feedback`);
+                feedbackDiv.classList.remove('hidden');
+                feedbackDiv.className = `mt-4 p-4 rounded-xl border text-xs space-y-2 ${res.score >= 4 ? 'bg-emerald-950/40 border-emerald-700/50 text-emerald-200' : 'bg-amber-950/40 border-amber-700/50 text-amber-200'}`;
+
+                feedbackDiv.innerHTML = `
+                    <div class="flex justify-between items-center font-bold">
+                        <span><i class="fa-solid fa-square-poll-vertical mr-1"></i> Penilaian AI Soalan ${qNum}</span>
+                        <span class="px-2.5 py-0.5 rounded-md bg-slate-800 border border-slate-700 text-amber-400">Markah: ${res.score} / 6</span>
+                    </div>
+                    <p class="text-slate-300 leading-relaxed">${res.feedback}</p>
+                    ${res.missingFacts && res.missingFacts.length > 0 ? `
+                        <div class="text-[11px] text-amber-300">
+                            <strong>Fakta Boleh Ditambah:</strong> ${res.missingFacts.join(', ')}
+                        </div>
+                    ` : ''}
+                `;
+
+                // Render Modal Breakdown Card
+                modalBreakdown.innerHTML += `
+                    <div class="bg-slate-900 border border-slate-700 p-4 rounded-xl space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-sm text-white">Soalan ${qNum} (${textbookRubric[i].page})</span>
+                            <span class="text-xs font-extrabold px-2.5 py-1 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">${res.score} / 6 Markah</span>
+                        </div>
+                        <p class="text-xs text-slate-300">${res.feedback}</p>
+                        ${res.sampleAnswer ? `
+                            <div class="mt-2 p-2.5 bg-slate-800/80 rounded border border-slate-700/60 text-[11px] text-slate-300">
+                                <span class="text-emerald-400 font-semibold block mb-1">Cadangan Jawapan Lengkap (Buku Teks):</span>
+                                ${res.sampleAnswer}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+
+            // Update Total Score & Open Modal
+            document.getElementById('modalTotalScore').textContent = totalScore;
+            const ratingText = document.getElementById('modalScoreRating');
+            if (totalScore >= 14) {
+                ratingText.textContent = "Cemerlang! Penguasaan Fakta Sangat Baik 🎉";
+                ratingText.className = "text-xs text-emerald-400 font-medium";
+            } else if (totalScore >= 9) {
+                ratingText.textContent = "Baik! Boleh Dipertingkatkan Lagi 👍";
+                ratingText.className = "text-xs text-amber-400 font-medium";
+            } else {
+                ratingText.textContent = "Perlu Ulang Kaji Baki Bab Buku Teks 📚";
+                ratingText.className = "text-xs text-rose-400 font-medium";
+            }
+
+            document.getElementById('resultModal').classList.remove('hidden');
+
+            // Reset Button State
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `
+                <i class="fa-solid fa-wand-magic-sparkles text-emerald-200"></i>
+                <span>Selesai & Semak Jawapan</span>
+            `;
+        }
+
+        function closeModal() {
+            document.getElementById('resultModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
